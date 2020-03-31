@@ -74,7 +74,7 @@ function loader(objpath, mtlpath) {
 function render() {
 	requestAnimationFrame(render);
 	var coord = definedRenderloop();
-	set3Dpositions(coord[0],coord[1],coord[2]);
+	set3Dpositions(coord[0],coord[1],z);
 	renderer.render(scene, camera);
 	//console.log("x and y value : ",coord[0]," and ",coord[1]);
 }
@@ -97,7 +97,7 @@ function definedRenderloop() {
 		x = -2;
 		y = -2;
 	}
-	return [x,y,z];
+	return [x,y];
 }
 
 //Linking
