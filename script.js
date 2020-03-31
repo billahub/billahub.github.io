@@ -93,11 +93,9 @@ function set3Dpositions(x, y, z) {
 function definedRenderloop() {
 	x = x + 0.1;
 	y += 0.1;
-	z += -1;
 	if (x > 10) {
 		x = -2;
 		y = -2;
-		z = -10;
 	}
 	return [x,y,z];
 }
