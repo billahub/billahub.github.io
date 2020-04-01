@@ -110,7 +110,7 @@ function addModelToScene( geometry, materials )
 		
 	var material = new THREE.MeshFaceMaterial( materials );
 	android = new THREE.Mesh( geometry, material );
-	android.scale.set(10,10,10);
+	android.scale.set(13,13,13);
 	android.position.set(-100,-100,-100);
 	scene.add( android );
 }
