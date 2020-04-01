@@ -127,7 +127,7 @@ function update()
 	// delta = change in time since last call (seconds)
 	delta = clock.getDelta(); 
 	var moveDistance = 100 * delta;
-	walking = true;
+	walking = false;
 
 	if (Gamepad.supported) 
 	{
