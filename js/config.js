@@ -1,5 +1,5 @@
 // host = '172.16.153.122';	// hostname or IP address
-host = 'wss://broker.hivemq.com';	// hostname or IP address
+host = 'broker.hivemq.com';	// hostname or IP address
 // host = '172.16.153.110';	// hostname or IP address
 port = 8000;
 topic = 'harivenkat967';		// topic to subscribe to
