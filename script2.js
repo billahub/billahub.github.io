@@ -51,7 +51,7 @@ function init(w,h)
 	var VIEW_ANGLE = 45, ASPECT = w / h, NEAR = 0.1, FAR = 20000;
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
-	camera.position.set(0,-50,400);
+	camera.position.set(0,0,500);
 	camera.lookAt(scene.position);	
 	// RENDERER
 	renderer = new THREE.WebGLRenderer({ canvas: DOM_canvas, antialias: true, alpha: true });
