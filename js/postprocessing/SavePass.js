@@ -1,8 +1,11 @@
+console.warn( "THREE.SavePass: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/index.html#manual/en/introduction/Import-via-modules." );
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 THREE.SavePass = function ( renderTarget ) {
+
+	THREE.Pass.call( this );
 
 	if ( THREE.CopyShader === undefined )
 		console.error( "THREE.SavePass relies on THREE.CopyShader" );
@@ -25,31 +28,33 @@ THREE.SavePass = function ( renderTarget ) {
 
 	if ( this.renderTarget === undefined ) {
 
-		this.renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
-		this.renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, this.renderTargetParameters );
+		this.renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false } );
+		this.renderTarget.texture.name = "SavePass.rt";
 
 	}
 
-	this.enabled = true;
 	this.needsSwap = false;
-	this.clear = false;
+
+	this.fsQuad = new THREE.Pass.FullScreenQuad( this.material );
 
 };
 
-THREE.SavePass.prototype = {
+THREE.SavePass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	constructor: THREE.SavePass,
+
+	render: function ( renderer, writeBuffer, readBuffer ) {
 
 		if ( this.uniforms[ this.textureID ] ) {
 
-			this.uniforms[ this.textureID ].value = readBuffer;
+			this.uniforms[ this.textureID ].value = readBuffer.texture;
 
 		}
 
-		THREE.EffectComposer.quad.material = this.material;
-
-		renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, this.renderTarget, this.clear );
+		renderer.setRenderTarget( this.renderTarget );
+		if ( this.clear ) renderer.clear();
+		this.fsQuad.render( renderer );
 
 	}
 
-};
+} );

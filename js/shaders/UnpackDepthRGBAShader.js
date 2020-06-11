@@ -1,3 +1,4 @@
+console.warn( "THREE.UnpackDepthRGBAShader: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/index.html#manual/en/introduction/Import-via-modules." );
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -9,8 +10,8 @@ THREE.UnpackDepthRGBAShader = {
 
 	uniforms: {
 
-		"tDiffuse": { type: "t", value: null },
-		"opacity":  { type: "f", value: 1.0 }
+		"tDiffuse": { value: null },
+		"opacity": { value: 1.0 }
 
 	},
 
@@ -20,12 +21,12 @@ THREE.UnpackDepthRGBAShader = {
 
 		"void main() {",
 
-			"vUv = uv;",
-			"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+		"	vUv = uv;",
+		"	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
 
 		"}"
 
-	].join("\n"),
+	].join( "\n" ),
 
 	fragmentShader: [
 
@@ -35,23 +36,15 @@ THREE.UnpackDepthRGBAShader = {
 
 		"varying vec2 vUv;",
 
-		// RGBA depth
-
-		"float unpackDepth( const in vec4 rgba_depth ) {",
-
-			"const vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );",
-			"float depth = dot( rgba_depth, bit_shift );",
-			"return depth;",
-
-		"}",
+		"#include <packing>",
 
 		"void main() {",
 
-			"float depth = 1.0 - unpackDepth( texture2D( tDiffuse, vUv ) );",
-			"gl_FragColor = opacity * vec4( vec3( depth ), 1.0 );",
+		"	float depth = 1.0 - unpackRGBAToDepth( texture2D( tDiffuse, vUv ) );",
+		"	gl_FragColor = vec4( vec3( depth ), opacity );",
 
 		"}"
 
-	].join("\n")
+	].join( "\n" )
 
 };

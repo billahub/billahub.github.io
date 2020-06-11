@@ -1,8 +1,11 @@
+console.warn( "THREE.FilmPass: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/index.html#manual/en/introduction/Import-via-modules." );
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 THREE.FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
+
+	THREE.Pass.call( this );
 
 	if ( THREE.FilmShader === undefined )
 		console.error( "THREE.FilmPass relies on THREE.FilmShader" );
@@ -24,31 +27,32 @@ THREE.FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, 
 	if ( scanlinesIntensity !== undefined ) this.uniforms.sIntensity.value = scanlinesIntensity;
 	if ( scanlinesCount !== undefined ) this.uniforms.sCount.value = scanlinesCount;
 
-	this.enabled = true;
-	this.renderToScreen = false;
-	this.needsSwap = true;
+	this.fsQuad = new THREE.Pass.FullScreenQuad( this.material );
 
 };
 
-THREE.FilmPass.prototype = {
+THREE.FilmPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	constructor: THREE.FilmPass,
 
-		this.uniforms[ "tDiffuse" ].value = readBuffer;
-		this.uniforms[ "time" ].value += delta;
+	render: function ( renderer, writeBuffer, readBuffer, deltaTime /*, maskActive */ ) {
 
-		THREE.EffectComposer.quad.material = this.material;
+		this.uniforms[ "tDiffuse" ].value = readBuffer.texture;
+		this.uniforms[ "time" ].value += deltaTime;
 
 		if ( this.renderToScreen ) {
 
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
+			renderer.setRenderTarget( null );
+			this.fsQuad.render( renderer );
 
 		} else {
 
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, false );
+			renderer.setRenderTarget( writeBuffer );
+			if ( this.clear ) renderer.clear();
+			this.fsQuad.render( renderer );
 
 		}
 
 	}
 
-};
+} );

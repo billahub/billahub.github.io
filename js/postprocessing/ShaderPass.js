@@ -1,51 +1,67 @@
+console.warn( "THREE.ShaderPass: As part of the transition to ES6 Modules, the files in 'examples/js' were deprecated in May 2020 (r117) and will be deleted in December 2020 (r124). You can find more information about developing using ES6 Modules in https://threejs.org/docs/index.html#manual/en/introduction/Import-via-modules." );
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 THREE.ShaderPass = function ( shader, textureID ) {
 
+	THREE.Pass.call( this );
+
 	this.textureID = ( textureID !== undefined ) ? textureID : "tDiffuse";
 
-	this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+	if ( shader instanceof THREE.ShaderMaterial ) {
 
-	this.material = new THREE.ShaderMaterial( {
+		this.uniforms = shader.uniforms;
 
-		uniforms: this.uniforms,
-		vertexShader: shader.vertexShader,
-		fragmentShader: shader.fragmentShader
+		this.material = shader;
 
-	} );
+	} else if ( shader ) {
 
-	this.renderToScreen = false;
+		this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
 
-	this.enabled = true;
-	this.needsSwap = true;
-	this.clear = false;
+		this.material = new THREE.ShaderMaterial( {
+
+			defines: Object.assign( {}, shader.defines ),
+			uniforms: this.uniforms,
+			vertexShader: shader.vertexShader,
+			fragmentShader: shader.fragmentShader
+
+		} );
+
+	}
+
+	this.fsQuad = new THREE.Pass.FullScreenQuad( this.material );
 
 };
 
-THREE.ShaderPass.prototype = {
+THREE.ShaderPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	constructor: THREE.ShaderPass,
+
+	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
 		if ( this.uniforms[ this.textureID ] ) {
 
-			this.uniforms[ this.textureID ].value = readBuffer;
+			this.uniforms[ this.textureID ].value = readBuffer.texture;
 
 		}
 
-		THREE.EffectComposer.quad.material = this.material;
+		this.fsQuad.material = this.material;
 
 		if ( this.renderToScreen ) {
 
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
+			renderer.setRenderTarget( null );
+			this.fsQuad.render( renderer );
 
 		} else {
 
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, this.clear );
+			renderer.setRenderTarget( writeBuffer );
+			// TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
+			if ( this.clear ) renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+			this.fsQuad.render( renderer );
 
 		}
 
 	}
 
-};
+} );
