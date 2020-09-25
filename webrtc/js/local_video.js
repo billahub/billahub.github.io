@@ -22,7 +22,7 @@ var sdpConstraints = {
 };
 
 var room = "lobby-01";
-var socket = io.connect("wss://192.168.43.232:9010");
+var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
 
 socket.emit('create or join', room);
 console.log('Attempted to create or join room', room);
