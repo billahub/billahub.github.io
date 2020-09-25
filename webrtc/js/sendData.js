@@ -107,7 +107,6 @@ window.onbeforeunload = function() {
 function clbkDataChannelMsg(msg){
   console.log("Callback : ");
   console.log(msg.data);
-  dataResult = msg;
 }
 
 
@@ -128,6 +127,8 @@ function createPeerConnection() {
     pc.onicecandidate = handleIceCandidate;
     dataChannel = pc.createDataChannel("mousePoints");
     dataChannel.onopen = onDataChannelOpen;
+    dataChannel.onmessage = clbkDataChannelMsg;
+
     console.log('Created RTCPeerConnnection');
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);
