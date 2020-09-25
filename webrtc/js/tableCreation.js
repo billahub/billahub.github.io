@@ -21,6 +21,16 @@ var tbl_data = [
         name: "sendData-v1",
         desc: "Able to send <strong>the data</strong> to the client.",
         link: "/webrtc/sendData.html"
+    },
+    {
+        name: "receiveVideoData-v1",
+        desc: "Able to receive <strong>video and data</strong> from the client.",
+        link: "/webrtc/receiveVideoData.html"
+    },
+    {
+        name: "sendVideoData-v1",
+        desc: "Able to send <strong>video and data</strong> to the client.",
+        link: "/webrtc/sendVideoData.html"
     }
 ];
 
