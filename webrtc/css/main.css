@@ -4,6 +4,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  color: rgba(252, 252, 252, 0.89);
 }
 
 html, body{
@@ -15,7 +16,6 @@ html, body{
 
 h1{
   height: 10%;
-  color: rgba(252, 252, 252, 0.89);
 }
 
 #vid-div{
@@ -29,5 +29,16 @@ video{
   height: 75vh;
 }
 
+td, th{
+  padding: 10px;
+}
+
+strong{
+  color: rgba(127, 218, 42, 0.89);
+}
+
+a {
+  color: rgb(10, 166, 228);
+}
 
 
