@@ -10,15 +10,20 @@
   </head>
 
   <body>
-    <h1>WebRTC -- send video</h1>
+    <h1>WebRTC -- sent video and data</h1>
 
     <div id="videos">
       <video id="localVideo" autoplay muted></video>
     </div>
+    <h4 style="color: rgba(127, 218, 42, 0.89);">Input:</h4>
+    <textarea id="txt-input"></textarea>
+    <br>
+    <br>
+    <input type="button" value="send" id="btn-send"/>
 
     <script src="js/lib/socket.io.js"></script>
     <script src="js/lib/adapter.js"></script>
-    <script src="js/sendVideo.js"></script>
+    <script src="js/sendVideoData.js"></script>
 
   </body>
 

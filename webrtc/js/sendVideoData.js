@@ -5,6 +5,7 @@ var isInitiator = false;
 var isStarted = false;
 var localStream;
 var pc;
+var dataChannel;
 
 var pcConfig = {
   'iceServers': [{
@@ -12,7 +13,8 @@ var pcConfig = {
   }]
 };
 
-var room = "room-video";
+
+var room = "room-videoData";
 var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
 
 socket.emit('create or join', room);
@@ -122,22 +124,20 @@ function callback_ondatachannel(){
   console.log("Data channel recieved.");
 }
 
+function clbkDataChannelMsg(msg){
+  console.log("Callback : ");
+  console.log(msg.data);
+}
+
 /////////////////////////////////////////////////////////
 
 function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(pcConfig);
     pc.onicecandidate = handleIceCandidate;
-    //pc.ondatachannel = callback_ondatachannel;
-
-    /*if ('ontrack' in pc) {
-      pc.ontrack = handleRemoteStreamAdded;
-    } else {
-      // deprecated
-      pc.onaddstream = handleRemoteStreamAdded;
-    }
-    pc.onremovestream = handleRemoteStreamRemoved;
-    */
+    dataChannel = pc.createDataChannel("mousePoints");
+    dataChannel.onopen = callback_ondatachannel;
+    dataChannel.onmessage = clbkDataChannelMsg;
     console.log('Created RTCPeerConnnection');
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);

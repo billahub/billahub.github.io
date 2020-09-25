@@ -5,9 +5,6 @@ var isInitiator = false;
 var isStarted = false;
 var pc;
 var remoteStream;
-var turnReady;
-var vid_div = document.getElementById("vid-div");
-var vid_div_ps = vid_div.getBoundingClientRect();
 
 var pcConfig = {
   'iceServers': [{
@@ -15,17 +12,9 @@ var pcConfig = {
   }]
 };
 
-// Set up audio and video regardless of what devices are present.
-var sdpConstraints = {
-  'mandatory': {
-    'OfferToReceiveAudio': true,
-    'OfferToReceiveVideo': true
-  }
-};
-
 /////////////////////////////////////////////
 
-var room = "lobby-01";
+var room = "room-video";
 
 var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
 socket.emit('create or join', room);
@@ -92,15 +81,7 @@ socket.on('message', function(message) {
 ////////////////////////////////////////////////////
 
 var remoteVideo = document.querySelector('#remoteVideo');
-/*
-if (location.hostname !== 'localhost') {
-  requestTurn(
-//    'https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913'
-    'https://service.xirsys.com/ice?ident=vivekchanddru&secret=ad6ce53a-e6b5-11e6-9685-937ad99985b9&domain=www.vivekc.xyz&application=default&room=testing&secure=1'
-  
-);
-}
-*/
+
 function maybeStart() {
   console.log('>>>>>>> maybeStart() ', isStarted, isChannelReady);
   if (!isStarted && isChannelReady) {
@@ -219,21 +200,3 @@ function stop() {
   pc = null;
 }
 
-
-var mouse_coordinates = [];
-
-vid_div.addEventListener("mousedown", function(){
-
-  vid_div.onmousemove = function(){
-    mouse_coordinates.push([(event.clientX-vid_div.offsetLeft), event.clientY-vid_div.offsetTop]);
-  }
-});
-
-vid_div.addEventListener("mouseup", function(){
-  vid_div.onmousemove = null;
-  console.log("mouse coordinates : "+mouse_coordinates);
-  if(dataChannel){
-    //dataChannel.send("Hello Billa!");
-  }
-  mouse_coordinates = [];
-});

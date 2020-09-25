@@ -3,8 +3,10 @@
 var isChannelReady = false;
 var isInitiator = false;
 var isStarted = false;
-var localStream;
 var pc;
+var remoteStream;
+var dataChannel;
+var txt_output = document.getElementById("txt-output");
 
 var pcConfig = {
   'iceServers': [{
@@ -12,7 +14,10 @@ var pcConfig = {
   }]
 };
 
-var room = "room-video";
+/////////////////////////////////////////////
+
+var room = "room-videoData";
+
 var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
 
 socket.emit('create or join', room);
@@ -25,19 +30,18 @@ socket.on('created', function(room) {
 
 socket.on('full', function(room) {
   console.log('Room ' + room + ' is full');
+  alert("Socket room is full.");
 });
 
 socket.on('join', function (room){
   console.log('Another peer made a request to join room ' + room);
   console.log('This peer is the initiator of room ' + room + '!');
   isChannelReady = true;
-  maybeStart();
 });
 
 socket.on('joined', function(room) {
   console.log('joined: ' + room);
   isChannelReady = true;
-  maybeStart();
 });
 
 socket.on('log', function(array) {
@@ -54,7 +58,16 @@ function sendMessage(message) {
 // This client receives a message
 socket.on('message', function(message) {
   console.log('Client received message:', message);
-  if (message.type === 'answer' && isStarted) {
+
+  if (message === 'got user media') {
+    maybeStart();
+  } else if (message.type === 'offer') {
+    if (!isStarted) {
+      maybeStart();
+    }
+    pc.setRemoteDescription(new RTCSessionDescription(message));
+    doAnswer();
+  } else if (message.type === 'answer' && isStarted) {
     console.log("received answer");
     pc.setRemoteDescription(new RTCSessionDescription(message));
   } else if (message.type === 'candidate' && isStarted) {
@@ -66,51 +79,19 @@ socket.on('message', function(message) {
   } else if (message === 'bye' && isStarted) {
     handleRemoteHangup();
   }
-  else{
-    console.log("May be irresponsible message.",isStarted);
-  }
 });
 
 ////////////////////////////////////////////////////
 
-var localVideo = document.querySelector('#localVideo');
-
-navigator.mediaDevices.getUserMedia({
-  video: true
-})
-.then(gotStream)
-.catch(function(e) {
-  alert('getUserMedia() error: ' + e.name);
-});
-
-function gotStream(stream) {
-  console.log('Adding local stream.');
-  if ('srcObject' in localVideo) {
-    localVideo.srcObject = stream;
-  } else {
-    // deprecated
-    localVideo.src = window.URL.createObjectURL(stream);
-  }
-  localStream = stream;
-  maybeStart();
-}
-
-var constraints = {
-  video: true
-};
-
-console.log('Getting user media with constraints', constraints);
-
+var remoteVideo = document.querySelector('#remoteVideo');
 
 function maybeStart() {
-  console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
-  if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
+  console.log('>>>>>>> maybeStart() ', isStarted, isChannelReady);
+  if (!isStarted && isChannelReady) {
     console.log('>>>>>> creating peer connection');
     createPeerConnection();
-    pc.addStream(localStream);
     isStarted = true;
     console.log('isInitiator', isInitiator);
-    doCall();
   }
 }
 
@@ -118,26 +99,31 @@ window.onbeforeunload = function() {
   sendMessage('bye');
 };
 
-function callback_ondatachannel(){
-  console.log("Data channel recieved.");
-}
-
 /////////////////////////////////////////////////////////
+
+
+function clbkDataChannelMsg(msg){
+    txt_output.value = msg.data;
+  }
+  
+function callback_ondatachannel(event){
+    console.log("Data channel recieved.");
+    dataChannel = event.channel;
+    dataChannel.onmessage = clbkDataChannelMsg;
+}
 
 function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(pcConfig);
     pc.onicecandidate = handleIceCandidate;
-    //pc.ondatachannel = callback_ondatachannel;
-
-    /*if ('ontrack' in pc) {
+    pc.ondatachannel = callback_ondatachannel;
+    if ('ontrack' in pc) {
       pc.ontrack = handleRemoteStreamAdded;
     } else {
       // deprecated
       pc.onaddstream = handleRemoteStreamAdded;
     }
     pc.onremovestream = handleRemoteStreamRemoved;
-    */
     console.log('Created RTCPeerConnnection');
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);
@@ -162,13 +148,9 @@ function handleIceCandidate(event) {
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
-  if ('srcObject' in remoteVideo) {
-    remoteVideo.srcObject = event.streams[0];
-  } else {
-    // deprecated
-    remoteVideo.src = window.URL.createObjectURL(event.stream);
-  }
-  remoteStream = event.stream;
+  console.log(event.streams[0]);
+  remoteVideo.srcObject = event.streams[0];
+  remoteStream = event.streams[0];
 }
 
 function handleCreateOfferError(event) {

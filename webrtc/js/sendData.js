@@ -4,9 +4,7 @@ var isChannelReady = false;
 var isInitiator = false;
 var isStarted = false;
 var pc;
-var turnReady;
 var dataChannel;
-var dataResult;
 var txt_input = document.getElementById("txt-input");
 var btn_send = document.getElementById("btn-send");
 
@@ -16,7 +14,7 @@ var pcConfig = {
   }]
 };
 
-var room = "lobby-01";
+var room = "room-data";
 var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
 
 
@@ -213,6 +211,7 @@ btn_send.addEventListener("click", function(){
   var message = txt_input.value;
   if(message != ""){
     dataChannel.send(message);
+    txt_input.value = "";
     console.log("Message sent over data channel.");
   }else{
     console.log("Please fill some text in input box.");
