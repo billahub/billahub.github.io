@@ -107,9 +107,7 @@ window.onbeforeunload = function() {
 /////////////////////////////////////////////////////////
 
 function clbkDataChannelMsg(msg){
-  console.log("Callback : ");
-  console.log(msg.data);
-  dataResult = msg;
+  txt_output.value = msg;
 }
 
 function callback_ondatachannel(event){
