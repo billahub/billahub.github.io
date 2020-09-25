@@ -1,11 +1,18 @@
 
 var tbl_apps = document.getElementById("tbl-apps");
 
-var tbl_data = [{
-    name: "remoteVideo-v1",
-    desc: "Able to get <strong>the video stream</strong> from the client.",
-    link: "/remoteVideo.html"
-}];
+var tbl_data = [
+    {
+        name: "receiveVideo-v1",
+        desc: "Able to receive <strong>the video stream</strong> from the client.",
+        link: "/webrtc/receiveVideo.html"
+    },
+    {
+        name: "sendVideo-v1",
+        desc: "Able to send <strong>the video stream</strong> to the client.",
+        link: "/webrtc/sendVideo.html"
+    }
+];
 
 function fillRows(){
     tbl_data.forEach(rowData => {
