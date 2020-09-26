@@ -6,6 +6,8 @@ var isStarted = false;
 var localStream;
 var pc;
 var dataChannel;
+var txt_input = document.getElementById("txt-input");
+var btn_send = document.getElementById("btn-send");
 
 var pcConfig = {
   'iceServers': [{
@@ -223,3 +225,23 @@ function stop() {
   pc.close();
   pc = null;
 }
+
+
+function sendMsgDataChannel(msg){
+  if(dataChannel.readyState == "open"){
+    dataChannel.send(msg);
+  }else{
+    console.log("Data Channel is not in open state.");
+  }
+}
+
+btn_send.addEventListener("click", function(){
+  var message = txt_input.value;
+  if(message != ""){
+    dataChannel.send(message);
+    txt_input.value = "";
+    console.log("Message sent over data channel.");
+  }else{
+    console.log("Please fill some text in input box.");
+  }
+})
