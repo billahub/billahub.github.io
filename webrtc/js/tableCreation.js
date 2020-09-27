@@ -41,6 +41,11 @@ var tbl_data = [
         name: "sendVideoMousePoints-v1",
         desc: "Able to send <strong>video and mouse points</strong> to the client.",
         link: "/webrtc/sendVideoMousePoints.html"
+    },
+    {
+        name: "receiveVideoSendMousePoints-android-v1",
+        desc: "Able to <strong>receive video and send mouse points</strong> to-fro the client.",
+        link: "/webrtc/rcvVidMouse-android.html"
     }
 ];
 
