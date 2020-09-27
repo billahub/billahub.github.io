@@ -8,6 +8,7 @@ var remoteStream;
 var dataChannel;
 var result;
 var txt_output = document.getElementById("txt-output");
+var vid_div = document.getElementById("vid-div");
 
 var pcConfig = {
   'iceServers': [{
