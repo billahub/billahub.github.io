@@ -98,10 +98,6 @@ function gotStream(stream) {
   maybeStart();
 }
 
-
-console.log('Getting user media with constraints', constraints);
-
-
 function maybeStart() {
   console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
   if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
