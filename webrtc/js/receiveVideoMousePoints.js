@@ -6,6 +6,7 @@ var isStarted = false;
 var pc;
 var remoteStream;
 var dataChannel;
+var result;
 var txt_output = document.getElementById("txt-output");
 
 var pcConfig = {
@@ -105,6 +106,7 @@ window.onbeforeunload = function() {
 function clbkDataChannelMsg(msg){
     txt_output.value = msg.data;
     console.log(msg.data);
+    result = msg.data;
   }
   
 function callback_ondatachannel(event){
