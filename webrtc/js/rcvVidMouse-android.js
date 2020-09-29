@@ -230,9 +230,9 @@ vid_div.addEventListener("mousedown", function(){
 
 vid_div.addEventListener("mouseup", function(){
   vid_div.onmousemove = null;
-  console.log("mouse coordinates : "+mouse_coordinates);
   console.log("Video width:"+vid_div.offsetWidth+" and height:"+vid_div.offsetHeight);
   mouse_coordinates.push([vid_div.offsetWidth, vid_div.offsetHeight]);
+  console.log("mouse coordinates : "+mouse_coordinates);
   sendMsgDataChannel(JSON.stringify(mouse_coordinates))
   mouse_coordinates = [];
 });
