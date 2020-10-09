@@ -23,7 +23,7 @@ var pcConfig = {
 
 /////////////////////////////////////////////
 
-var room = "room-video";
+var room = "room-video1";
 
 var socket = io.connect("https://signaling.coughrecorder.com/");
 socket.emit('create or join', room);
