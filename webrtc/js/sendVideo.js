@@ -13,7 +13,7 @@ var pcConfig = {
   {
     urls: 'turn:13.127.131.117:9357',
     username: 'technoturn',
-    credentials: 'Wipro@123'
+    credential: 'Wipro@123'
   }],
   'mandatory': {
     'OfferToReceiveAudio': true,
