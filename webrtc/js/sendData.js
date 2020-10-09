@@ -15,7 +15,7 @@ var pcConfig = {
 };
 
 var room = "room-data";
-var socket = io.connect("https://mighty-ridge-80415.herokuapp.com/");
+var socket = io.connect("https://signaling.coughrecorder.com/");
 
 
 socket.emit('create or join', room);
