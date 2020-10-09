@@ -9,7 +9,11 @@ var pc;
 var pcConfig = {
   'iceServers': [{
     'urls': 'stun:stun.l.google.com:19302'
-  }]
+  }],
+  'mandatory': {
+    'OfferToReceiveAudio': true,
+    'OfferToReceiveVideo': true
+  }
 };
 
 var room = "room-video";
