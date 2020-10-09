@@ -7,8 +7,13 @@ var pc;
 var remoteStream;
 
 var pcConfig = {
-  'iceServers': [{
-    'urls': 'stun:stun.l.google.com:19302'
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  },
+  {
+    urls: 'turn:13.127.131.117:9357',
+    username: 'technoturn',
+    credentials: 'Wipro@123'
   }],
   'mandatory': {
     'OfferToReceiveAudio': true,
