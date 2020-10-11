@@ -22,7 +22,7 @@ var pcConfig = {
 };
 
 var room = "room-video1";
-var socket = io.connect("https://remoteassistance.coughrecorder.com/");
+var socket = io.connect("https://remoteassistance.coughrecorder.com/signal");
 
 socket.emit('create or join', room);
 console.log('Attempted to create or join room', room);
