@@ -16,7 +16,7 @@ var pcConfig = {
 
 
 var room = "room-videoMousePoints";
-var socket = io.connect("https://signaling.coughrecorder.com/");
+var socket = io.connect("https://remoteassistance.coughrecorder.com/");
 
 socket.emit('create or join', room);
 console.log('Attempted to create or join room', room);
